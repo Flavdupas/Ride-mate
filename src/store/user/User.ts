@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: User = {
   isRegister: false,
+  favoriteSports: [],
 };
 
 const userSlice = createSlice({
@@ -12,8 +13,11 @@ const userSlice = createSlice({
     updateRegister: (state, action: PayloadAction<boolean>) => {
       state.isRegister = action.payload;
     },
+    updateFavoriteSports: (state, action: PayloadAction<number[]>) => {
+      state.favoriteSports = action.payload;
+    }
   }
 });
 
-export const { updateRegister } = userSlice.actions;
+export const { updateRegister, updateFavoriteSports } = userSlice.actions;
 export default userSlice.reducer;

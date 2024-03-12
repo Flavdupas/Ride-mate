@@ -7,8 +7,9 @@ export const handleRegisterCheck = async (user: User) => {
     resetHistory().then(() => {
       router.replace("/home/");
     });
+  } else {
+    resetHistory().then(() => {
+      router.replace("/register/");
+    });
   }
-  resetHistory().then(() => {
-    router.replace("/register/");
-  });
 };

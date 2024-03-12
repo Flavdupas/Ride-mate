@@ -6,7 +6,6 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store/store";
 import { User } from "@/src/models/UserModel";
-import { router } from "expo-router";
 import { delay } from "@/src/utils/time";
 import { handleRegisterCheck } from "@/src/hooks/UserHooks";
 

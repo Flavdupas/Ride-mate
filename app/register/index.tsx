@@ -1,8 +1,10 @@
 import { Bar } from "@/src/components/Bar";
 import { SportView } from "@/src/components/SportView";
 import { ListSport } from "@/src/constants/Sport";
+import { updateFavoriteSports, updateRegister } from "@/src/store/user/User";
 import { GRAY_COLOR, MAIN_COLOR } from "@/src/styles/Color";
 import GlobalStyle from "@/src/styles/Global";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -11,14 +13,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
 const Index = () => {
   /* LOGIQUE */
   const SPORTS = [...ListSport];
   const [sportChoosen, setSportChoosen] = useState<number[]>([]);
+  const dispatch = useDispatch();
 
   const handleClick = () => {
-    
+    dispatch(updateFavoriteSports(sportChoosen));
+    dispatch(updateRegister(true));
+    router.replace('/home/');
   }
 
   /* STYLES */
