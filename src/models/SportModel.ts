@@ -1,7 +1,7 @@
-import { Image } from "react-native"
+import { ImageSourcePropType } from "react-native/types"
 
 export type Sport = {
     index:number,
     title: string,
-    image: Image,
+    svg: ImageSourcePropType ,
 }

@@ -1,7 +1,8 @@
 import React, { FC, useState } from "react";
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import { Sport } from "../models/SportModel";
 import { MAIN_COLOR } from "../styles/Color";
+import { Svg, SvgUri } from "react-native-svg";
 
 interface SportViewInterface {
   sport: Sport;
@@ -42,7 +43,9 @@ export const SportView: FC<SportViewInterface> = ({
 
   return (
     <TouchableWithoutFeedback onPress={handleClick}>
+
       <View style={styles.body}>
+        
         <Text>{sport.title}</Text>
       </View>
     </TouchableWithoutFeedback>
