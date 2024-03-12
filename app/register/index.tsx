@@ -3,7 +3,6 @@ import { SportView } from "@/src/components/SportView";
 import { ListSport } from "@/src/constants/Sport";
 import { GRAY_COLOR, MAIN_COLOR } from "@/src/styles/Color";
 import GlobalStyle from "@/src/styles/Global";
-import { FlashList } from "@shopify/flash-list";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -18,6 +17,10 @@ const Index = () => {
   const SPORTS = [...ListSport];
   const [sportChoosen, setSportChoosen] = useState<number[]>([]);
 
+  const handleClick = () => {
+    
+  }
+
   /* STYLES */
   const styles = StyleSheet.create({
     body: {
@@ -25,7 +28,7 @@ const Index = () => {
       padding: 10,
     },
     scrollView: {
-      paddingTop: 125,
+      paddingTop: 100,
     },
     title: {
       color: MAIN_COLOR,
@@ -98,7 +101,7 @@ const Index = () => {
         </View>
       </ScrollView>
       <View style={styles.btnWrapper}>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={handleClick}>
           <Text style={styles.txtBtn}>Valider</Text>
         </TouchableOpacity>
       </View>
