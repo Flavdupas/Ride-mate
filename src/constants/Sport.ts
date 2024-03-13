@@ -40,54 +40,46 @@ export const ListSport: Sport[] = [
   },
   {
     index: 9,
-    title: "Cours d'orientation",
+    title: "Boule",
   },
   {
     index: 10,
-    title: "Boule",
+    title: "Aikido",
   },
   {
     index: 11,
-    title: "Aikido",
-  },
-  {
-    index: 12,
     title: "Escrime",
   },
   {
-    index: 13,
+    index: 12,
     title: "Bicross",
   },
   {
-    index: 14,
-    title: "Boule",
-  },
-  {
-    index: 15,
+    index: 13,
     title: "Aikido",
   },
   {
-    index: 16,
+    index: 14,
     title: "Activité de forme",
   },
   {
-    index: 17,
+    index: 15,
     title: "Musculation",
   },
   {
-    index: 18,
+    index: 16,
     title: "Canoé",
   },
   {
-    index: 19,
+    index: 17,
     title: "Pêche",
   },
   {
-    index: 20,
+    index: 18,
     title: "Aviron",
   },
   {
-    index: 21,
+    index: 19,
     title: "Boxe",
   },
 ];

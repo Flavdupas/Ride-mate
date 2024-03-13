@@ -37,6 +37,7 @@ export const BottomSheetFilter: FC<BottomSheetFilter> = ({
     setIsSportList(isSportList);
     setDataAray(data);
   };
+
   /* STYLES */
   const styles = StyleSheet.create({
     body: {
@@ -117,7 +118,7 @@ export const BottomSheetFilter: FC<BottomSheetFilter> = ({
                 onPress={() => handleClick(true, equipments, false)}
               >
                 <Text>
-                  {user.favoriteIndexEquip
+                  {user.favoriteIndexEquip !== null
                     ? equipments[user.favoriteIndexEquip].title
                     : ""}
                 </Text>

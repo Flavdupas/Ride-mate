@@ -32,7 +32,14 @@ import { IndicatorPin } from "@/src/components/IndicatorPin";
 import { ModalInfo } from "@/src/components/ModalInfo";
 import Pin from "@/src/components/icons/Pin";
 import { SearchBar } from "@/src/components/SearchBar";
-import { updateFavoriteIndexEquip, updateFavoriteIndexSport } from "@/src/store/user/User";
+import {
+  updateFavoriteIndexEquip,
+  updateFavoriteIndexSport,
+} from "@/src/store/user/User";
+import { LocationBtn } from "@/src/components/LocationBtn";
+import * as Location from "expo-location";
+import User from "@/src/components/icons/User";
+import { BottomSheetUser } from "@/src/components/BottomSheetUser";
 
 const Index = () => {
   /* LOGIQUE */
@@ -48,8 +55,11 @@ const Index = () => {
   const [modalInfoVisible, setModalInfoVisible] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const mapRef = useRef<MapView | null>(null);
+  const [userLocation, setUserLocation] =
+    useState<Location.LocationObject | null>(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const bottomSheetPinRef = useRef<BottomSheetModal>(null);
+  const bottomSheetuser = useRef<BottomSheetModal>(null);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -64,7 +74,7 @@ const Index = () => {
       setParking(data.parking);
     };
     handle();
-  }, [user.favoriteIndexSport, search]);
+  }, [user.favoriteIndexSport, search, user.favoriteIndexEquip]);
 
   const textChange = (data: string) => {
     setSearch(data);
@@ -72,7 +82,37 @@ const Index = () => {
 
   const handleDeleteFilter = () => {
     dispatch(updateFavoriteIndexSport(null));
-    dispatch(updateFavoriteIndexEquip(null))
+    dispatch(updateFavoriteIndexEquip(null));
+  };
+
+  const handleUserPosition = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === "granted" && mapRef.current) {
+      let location = await Location.getCurrentPositionAsync({});
+      setUserLocation(location);
+      mapRef.current.animateToRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.008,
+        longitudeDelta: 0.008,
+      });
+      bottomSheetuser.current?.present();
+      let minDistance = 99999999999999;
+      let indexParking = -1;
+      parking.forEach((item, index) => {
+        const distance = calculateDistance(
+          location.coords.latitude,
+          location.coords.longitude,
+          item.geo_point_2d.lat,
+          item.geo_point_2d.lon
+        );
+        if (minDistance > distance) {
+          minDistance = distance;
+          indexParking = index;
+        }
+      });
+      setNearParking(parking[indexParking]);
+    }
   };
 
   const handleSelect = (
@@ -93,6 +133,7 @@ const Index = () => {
       if (activite) {
         setDataActivite(activite);
         setDataParking(null);
+        setUserLocation(null)
 
         let minDistance = 99999999999999;
         let indexParking = -1;
@@ -158,7 +199,8 @@ const Index = () => {
       });
     }
     setDataParking(nearParking);
-    //setDataActivite(null);
+    bottomSheetuser.current?.dismiss();
+    bottomSheetPinRef.current?.present();
   };
 
   /* STYLES */
@@ -199,7 +241,6 @@ const Index = () => {
                     latitude: item.geo_shape.geometry.coordinates[1],
                     longitude: item.geo_shape.geometry.coordinates[0],
                   }}
-                  pinColor="blue"
                 >
                   <Pin />
                 </Marker>
@@ -221,8 +262,35 @@ const Index = () => {
                 strokeWidth={2}
               />
             )}
+            {userLocation && nearParking && (
+              <Polyline
+                coordinates={[
+                  {
+                    latitude: userLocation.coords.latitude,
+                    longitude: userLocation.coords.longitude,
+                  },
+                  {
+                    latitude: nearParking.geo_point_2d.lat,
+                    longitude: nearParking.geo_point_2d.lon,
+                  },
+                ]}
+                strokeColor="#000"
+                strokeWidth={2}
+              />
+            )}
+            {userLocation && (
+              <Marker
+                coordinate={{
+                  latitude: userLocation.coords.latitude,
+                  longitude: userLocation.coords.longitude,
+                }}
+              >
+                <User />
+              </Marker>
+            )}
           </MapView>
           <FilterButton onPress={handlePresentModalPress} />
+          <LocationBtn onPress={handleUserPosition} />
           <IndicatorPin onPress={toogleModalInfo} />
           <SearchBar onChange={textChange} />
           <ModalInfo visible={modalInfoVisible} onPress={toogleModalInfo} />
@@ -231,6 +299,10 @@ const Index = () => {
             equipments={equipments}
             data={activite}
             bottomSheetModalRef={bottomSheetModalRef}
+          />
+          <BottomSheetUser
+            refBS={bottomSheetuser}
+            onPress={handlePressNearParking}
           />
           <BottomSheetPin
             onDismiss={handleDismiss}

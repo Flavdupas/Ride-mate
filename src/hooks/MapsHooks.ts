@@ -56,15 +56,20 @@ export const parseActivity: (
           const activity = element.activite.toLowerCase();
           const searchParsed = search.toLowerCase();
           if (activity.includes(searchParsed)) {
-            result.push(element)
+            result.push(element);
           }
         } else {
-           result.push(element);
+          result.push(element);
         }
-       
       }
     }
   });
+
+  if (user.favoriteIndexEquip !== null) {
+    const name = (await getEquipment(user))[user.favoriteIndexEquip];
+
+    result = result.filter((item) => item.nom_equip.includes(name.title));
+  }
   return result;
 };
 

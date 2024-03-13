@@ -1,11 +1,6 @@
 import { Activite } from "../models/Activite";
 
 export function removeDuplicates(arr: Activite[]) {
-    let data: { title: string }[] = [];
-    arr.forEach((item) => {
-        if (item.nom_equip) {
-            data.push({ title: item.nom_equip });
-        }
-    })
-    return data;
+  const uniqueTitles = new Set(arr.map((item) => item.nom_equip).filter(Boolean));
+  return Array.from(uniqueTitles).map((title) => ({ title }));
 }
