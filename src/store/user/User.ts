@@ -18,7 +18,7 @@ const userSlice = createSlice({
     updateFavoriteSports: (state, action: PayloadAction<number[]>) => {
       state.favoriteSports = action.payload;
     },
-    updateFavoriteIndexSport: (state, action: PayloadAction<number>) => {
+    updateFavoriteIndexSport: (state, action: PayloadAction<number | null>) => {
       state.favoriteIndexSport = action.payload;
     },
     updateFavoriteIndexEquip: (state, action: PayloadAction<number | null>) => {
