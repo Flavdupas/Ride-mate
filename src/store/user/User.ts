@@ -4,6 +4,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 const initialState: User = {
   isRegister: false,
   favoriteSports: [],
+  favoriteIndexSport: null,
+  favoriteIndexEquip:null,
 };
 
 const userSlice = createSlice({
@@ -15,9 +17,15 @@ const userSlice = createSlice({
     },
     updateFavoriteSports: (state, action: PayloadAction<number[]>) => {
       state.favoriteSports = action.payload;
+    },
+    updateFavoriteIndexSport: (state, action: PayloadAction<number>) => {
+      state.favoriteIndexSport = action.payload;
+    },
+    updateFavoriteIndexEquip: (state, action: PayloadAction<number | null>) => {
+      state.favoriteIndexEquip = action.payload;
     }
   }
 });
 
-export const { updateRegister, updateFavoriteSports } = userSlice.actions;
+export const { updateRegister, updateFavoriteSports, updateFavoriteIndexSport,updateFavoriteIndexEquip } = userSlice.actions;
 export default userSlice.reducer;

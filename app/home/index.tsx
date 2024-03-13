@@ -2,10 +2,7 @@ import {
   Text,
   StyleSheet,
   View,
-  TouchableWithoutFeedback,
   TouchableOpacity,
-  Image,
-  Modal,
 } from "react-native";
 import React, {
   FC,
@@ -19,14 +16,13 @@ import React, {
 import MapView, {
   Marker,
   MarkerSelectEvent,
-  PROVIDER_GOOGLE,
 } from "react-native-maps";
 import GlobalStyle from "@/src/styles/Global";
-import { getActivity } from "@/src/hooks/MapsHooks";
+import { getEquipment, parseActivity, } from "@/src/hooks/MapsHooks";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store/store";
 import { Activite } from "@/src/models/Activite";
-import { mapInitialSettings } from "@/src/constants/Map";
+import { mapInitialSettings,  } from "@/src/constants/Map";
 import { GRAY_COLOR } from "@/src/styles/Color";
 import { FilterButton } from "@/src/components/FilterButton";
 import {
@@ -36,11 +32,16 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { CustomModal } from "@/src/components/Modal";
+import { ListSport } from "@/src/constants/Sport";
+import { Parking } from "@/src/models/Parking";
 
 const Index = () => {
   /* LOGIQUE */
   const user = useSelector((state: RootState) => state.user);
+  const data = useSelector((state: RootState) => state.data);
   const [activite, setActivite] = useState<Activite[]>([]);
+  const [parking, setParking] = useState<Parking[]>([]);
+  const [equipments, setEquipements] = useState<{title:string}[]>([]);
   const mapRef = useRef<MapView | null>(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -50,11 +51,14 @@ const Index = () => {
 
   useEffect(() => {
     const handle = async () => {
-      const data = await getActivity(user);
-      setActivite(data);
+      const equip = await getEquipment(user);
+      const activite = await parseActivity(data.activite, user);
+      setEquipements(equip);
+      setActivite(activite);
+      setParking(data.parking);
     };
     handle();
-  }, []);
+  }, [user.favoriteIndexSport]);
 
   const handleSelect = (e: MarkerSelectEvent) => {
     if (mapRef.current) {
@@ -97,9 +101,23 @@ const Index = () => {
                 />
               );
             })}
+            {parking.map((item, index) => {
+              return (
+                <Marker
+                  onSelect={(e) => handleSelect(e)}
+                  key={index}
+                  coordinate={{
+                    latitude: item.geo_shape.geometry.coordinates[1],
+                    longitude: item.geo_shape.geometry.coordinates[0],
+                  }}
+                  pinColor="blue"
+                />
+              );
+            })}
           </MapView>
           <FilterButton onPress={handlePresentModalPress} />
           <CustomBottomSheet
+            equipments={equipments}
             data={activite}
             bottomSheetModalRef={bottomSheetModalRef}
           />
@@ -112,19 +130,25 @@ const Index = () => {
 interface CustomBottomSheetInterface {
   bottomSheetModalRef: Ref<BottomSheetModal>;
   data: Activite[];
+  equipments:{title:string}[];
 }
 
 const CustomBottomSheet: FC<CustomBottomSheetInterface> = ({
   bottomSheetModalRef,
   data,
+  equipments,
 }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const snapPoints = useMemo(() => ["50%", "50%"], []);
+  const [dataArray, setDataAray] = useState<any[]>([]);
+  const user = useSelector((state: RootState) => state.user);
+  const [isSportList, setIsSportList] = useState<boolean>(true);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
+  const handleClick = (visible:boolean, data: any[], isSportList: boolean) => {
+    setModalVisible(visible);
+    setIsSportList(isSportList);
+    setDataAray(data);
+  }
   /* STYLES */
   const styles = StyleSheet.create({
     body: {
@@ -159,7 +183,6 @@ const CustomBottomSheet: FC<CustomBottomSheetInterface> = ({
       fontSize: 12,
       fontWeight: "500",
     },
-    
   });
 
   return (
@@ -168,20 +191,19 @@ const CustomBottomSheet: FC<CustomBottomSheetInterface> = ({
         ref={bottomSheetModalRef}
         index={1}
         snapPoints={snapPoints}
-        onChange={handleSheetChanges}
       >
-        <CustomModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+        <CustomModal modalVisible={modalVisible} setModalVisible={setModalVisible} data={dataArray} user={user} sportList={isSportList}/>
         <BottomSheetView style={styles.body}>
-          {data.length > 0 && (
+          {data && (
             <>
               <Text style={styles.title}>Filtres</Text>
               <Text style={styles.category}>Sports</Text>
-              <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-                <Text style={styles.txtButton}>{data[0].activite}</Text>
+              <TouchableOpacity style={styles.button} onPress={() => handleClick(true, ListSport, true)}>
+              <Text style={styles.txtButton}>{user.favoriteIndexSport !== null ? ListSport[user.favoriteIndexSport].title : 'test'}</Text>
               </TouchableOpacity>
               <Text style={styles.category}>Équipements</Text>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.txtButton}>{data[0].nom_equip}</Text>
+              <TouchableOpacity style={styles.button} onPress={() => handleClick(true, equipments, false)}>
+                <Text>{user.favoriteIndexEquip ? equipments[user.favoriteIndexEquip].title : ''}</Text>
               </TouchableOpacity>
             </>
           )}

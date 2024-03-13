@@ -1,3 +1,4 @@
+import { getEquipment } from '@/src/hooks/MapsHooks';
 import { Sport } from "../models/SportModel";
 
 export const ListSport: Sport[] = [
@@ -90,3 +91,8 @@ export const ListSport: Sport[] = [
     title: "Boxe",
   },
 ];
+
+export const equipment = [
+  {title:'test'},
+  {title:'test'},
+]
