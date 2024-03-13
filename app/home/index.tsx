@@ -61,10 +61,6 @@ const Index = () => {
   const bottomSheetPinRef = useRef<BottomSheetModal>(null);
   const bottomSheetuser = useRef<BottomSheetModal>(null);
 
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-
   useEffect(() => {
     const handle = async () => {
       const equip = await getEquipment(user);
@@ -75,6 +71,10 @@ const Index = () => {
     };
     handle();
   }, [user.favoriteIndexSport, search, user.favoriteIndexEquip]);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   const textChange = (data: string) => {
     setSearch(data);
@@ -133,7 +133,7 @@ const Index = () => {
       if (activite) {
         setDataActivite(activite);
         setDataParking(null);
-        setUserLocation(null)
+        setUserLocation(null);
 
         let minDistance = 99999999999999;
         let indexParking = -1;

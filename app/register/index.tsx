@@ -1,7 +1,11 @@
 import { Bar } from "@/src/components/Bar";
 import { SportView } from "@/src/components/SportView";
 import { ListSport } from "@/src/constants/Sport";
-import { updateFavoriteSports, updateRegister } from "@/src/store/user/User";
+import {
+  updateFavoriteIndexSport,
+  updateFavoriteSports,
+  updateRegister,
+} from "@/src/store/user/User";
 import { GRAY_COLOR, MAIN_COLOR } from "@/src/styles/Color";
 import GlobalStyle from "@/src/styles/Global";
 import { router } from "expo-router";
@@ -18,14 +22,14 @@ import { useDispatch } from "react-redux";
 const Index = () => {
   /* LOGIQUE */
   const SPORTS = [...ListSport];
-  const [sportChoosen, setSportChoosen] = useState<number[]>([]);
+  const [sportChoosen, setSportChoosen] = useState<number | null>(null);
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch(updateFavoriteSports(sportChoosen));
+    dispatch(updateFavoriteIndexSport(sportChoosen));
     dispatch(updateRegister(true));
-    router.replace('/home/');
-  }
+    router.replace("/home/");
+  };
 
   /* STYLES */
   const styles = StyleSheet.create({

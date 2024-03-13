@@ -5,7 +5,7 @@ import { resetHistory } from "../utils/router";
 export const handleRegisterCheck = async (user: User) => {
   if (user.isRegister) {
     resetHistory().then(() => {
-      router.replace("/home/");
+      router.replace("/register/");
     });
   } else {
     resetHistory().then(() => {

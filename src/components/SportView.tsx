@@ -5,8 +5,8 @@ import { GRAY_COLOR, MAIN_COLOR } from "../styles/Color";
 
 interface SportViewInterface {
   sport: Sport;
-  sportChoosen: number[];
-  setSportChoosen: (sportChoosen: number[]) => void;
+  sportChoosen: number|null;
+  setSportChoosen: (sportChoosen: number) => void;
 }
 
 export const SportView: FC<SportViewInterface> = ({
@@ -15,18 +15,13 @@ export const SportView: FC<SportViewInterface> = ({
   setSportChoosen,
 }) => {
   /* LOGIQUE */
-  const [hasClicked, setHasClicked] = useState<boolean>(false);
 
   const handleClick = () => {
-    const tempSportChoosen = [...sportChoosen];
-    if (!hasClicked) {
-      tempSportChoosen.push(sport.index);
+    if (sport.index === sportChoosen) {
+      setSportChoosen(-1);
     } else {
-      tempSportChoosen.splice(tempSportChoosen.indexOf(sport.index), 1);
+      setSportChoosen(sport.index);
     }
-    console.log(tempSportChoosen)
-    setSportChoosen(tempSportChoosen);
-    setHasClicked(!hasClicked);
   };
 
   /* STYLES */
@@ -36,15 +31,16 @@ export const SportView: FC<SportViewInterface> = ({
       width: 100,
       borderColor: MAIN_COLOR,
       borderWidth: 2,
-      backgroundColor: sportChoosen.includes(sport.index) ? MAIN_COLOR : "transparent",
+      backgroundColor:
+        sportChoosen === sport.index ? MAIN_COLOR : "transparent",
       justifyContent: "center",
       alignItems: "center",
     },
     title: {
-      color: hasClicked ? GRAY_COLOR : "rgba(255,255,255,.8)",
+      color: sportChoosen === sport.index ? GRAY_COLOR : "rgba(255,255,255,.8)",
       fontWeight: "700",
       textAlign: "center",
-    }
+    },
   });
 
   return (

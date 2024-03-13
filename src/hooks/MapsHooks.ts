@@ -38,6 +38,7 @@ export const parseActivity: (
   let result: Activite[] = [];
   data.forEach((element) => {
     if (element.activite) {
+  
       if (user.favoriteIndexSport !== null) {
         const activity = element.activite.toLowerCase();
         const name = ListSport[user.favoriteIndexSport].title.toLowerCase();
