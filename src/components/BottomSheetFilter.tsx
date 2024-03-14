@@ -13,6 +13,7 @@ import { CustomModal } from "./Modal";
 import { ListSport } from "../constants/Sport";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 import Cross from "./icons/Cross";
+import { TypeParking } from "../constants/TypeParking";
 
 interface BottomSheetFilter {
   bottomSheetModalRef: Ref<BottomSheetModal>;
@@ -31,11 +32,13 @@ export const BottomSheetFilter: FC<BottomSheetFilter> = ({
   const [dataArray, setDataAray] = useState<any[]>([]);
   const user = useSelector((state: RootState) => state.user);
   const [isSportList, setIsSportList] = useState<boolean>(true);
+  const [isTypeParking, setIsTypeParking] = useState<boolean>(true);
 
-  const handleClick = (visible: boolean, data: any[], isSportList: boolean) => {
+  const handleClick = (visible: boolean, data: any[], isSportList: boolean, isTypeParking: boolean) => {
     setModalVisible(visible);
     setIsSportList(isSportList);
     setDataAray(data);
+    setIsTypeParking(isTypeParking);
   };
 
   /* STYLES */
@@ -96,15 +99,27 @@ export const BottomSheetFilter: FC<BottomSheetFilter> = ({
           data={dataArray}
           user={user}
           sportList={isSportList}
+          typeParking={isTypeParking}
         />
         <BottomSheetView style={styles.body}>
           {data && (
             <>
               <Text style={styles.title}>Filtres</Text>
+              <Text style={styles.category}>Type parking</Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleClick(true, TypeParking, false,true)}
+              >
+                <Text style={styles.txtButton}>
+                  {user.favoriteTypeParking !== null
+                    ? TypeParking[user.favoriteTypeParking].title
+                    : ""}
+                </Text>
+              </TouchableOpacity>
               <Text style={styles.category}>Sports</Text>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleClick(true, ListSport, true)}
+                onPress={() => handleClick(true, ListSport, true,false)}
               >
                 <Text style={styles.txtButton}>
                   {user.favoriteIndexSport !== null
@@ -115,7 +130,7 @@ export const BottomSheetFilter: FC<BottomSheetFilter> = ({
               <Text style={styles.category}>Équipements</Text>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleClick(true, equipments, false)}
+                onPress={() => handleClick(true, equipments, false,false)}
               >
                 <Text>
                   {user.favoriteIndexEquip !== null

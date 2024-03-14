@@ -3,4 +3,5 @@ export type User = {
     favoriteSports: number[],
     favoriteIndexSport: number | null;
     favoriteIndexEquip: number | null;
+    favoriteTypeParking:number | null;
 }

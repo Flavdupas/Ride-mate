@@ -4,6 +4,7 @@ import { ListSport } from "../constants/Sport";
 import { removeDuplicates } from "../utils/array";
 import { Parking } from "../models/Parking";
 import { Adresse } from "../models/Adresse";
+import { TypeParking } from "../constants/TypeParking";
 
 export const getActivity = async () => {
   let offset = 0;
@@ -165,3 +166,10 @@ export const getEquipment = async (user: User) => {
   });
   return removeDuplicates(result);
 };
+
+export const parseParking = (user: User, data: Parking[]) => {
+  if (user.favoriteTypeParking !== null) {
+    return data.filter((item) => item.acces === TypeParking[user.favoriteTypeParking].title)
+  }
+  return data
+}

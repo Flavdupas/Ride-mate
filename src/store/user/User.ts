@@ -6,6 +6,7 @@ const initialState: User = {
   favoriteSports: [],
   favoriteIndexSport: null,
   favoriteIndexEquip:null,
+  favoriteTypeParking:null,
 };
 
 const userSlice = createSlice({
@@ -23,9 +24,12 @@ const userSlice = createSlice({
     },
     updateFavoriteIndexEquip: (state, action: PayloadAction<number | null>) => {
       state.favoriteIndexEquip = action.payload;
-    }
+    },
+    updateFavoriteTypeParking: (state, action: PayloadAction<number | null>) => {
+      state.favoriteTypeParking = action.payload;
+    },
   }
 });
 
-export const { updateRegister, updateFavoriteSports, updateFavoriteIndexSport,updateFavoriteIndexEquip } = userSlice.actions;
+export const { updateRegister, updateFavoriteSports, updateFavoriteIndexSport,updateFavoriteIndexEquip,updateFavoriteTypeParking } = userSlice.actions;
 export default userSlice.reducer;

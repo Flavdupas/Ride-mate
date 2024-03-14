@@ -13,7 +13,7 @@ import MapView, {
   Polyline,
 } from "react-native-maps";
 import GlobalStyle from "@/src/styles/Global";
-import { getEquipment, parseActivity } from "@/src/hooks/MapsHooks";
+import { getEquipment, parseActivity, parseParking } from "@/src/hooks/MapsHooks";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/src/store/store";
 import { Activite } from "@/src/models/Activite";
@@ -35,6 +35,7 @@ import { SearchBar } from "@/src/components/SearchBar";
 import {
   updateFavoriteIndexEquip,
   updateFavoriteIndexSport,
+  updateFavoriteTypeParking,
 } from "@/src/store/user/User";
 import { LocationBtn } from "@/src/components/LocationBtn";
 import * as Location from "expo-location";
@@ -66,12 +67,13 @@ const Index = () => {
     const handle = async () => {
       const equip = await getEquipment(user);
       const activite = await parseActivity(data.activite, user, search);
+      const parking = await parseParking(user, data.parking)
       setEquipements(equip);
       setActivite(activite);
-      setParking(data.parking);
+      setParking(parking);
     };
     handle();
-  }, [user.favoriteIndexSport, search, user.favoriteIndexEquip]);
+  }, [user.favoriteIndexSport, search, user.favoriteIndexEquip, user.favoriteTypeParking]);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -84,6 +86,7 @@ const Index = () => {
   const handleDeleteFilter = () => {
     dispatch(updateFavoriteIndexSport(null));
     dispatch(updateFavoriteIndexEquip(null));
+    dispatch(updateFavoriteTypeParking(null));
   };
 
   const handleUserPosition = async () => {
