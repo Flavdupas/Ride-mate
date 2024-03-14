@@ -5,9 +5,11 @@ import { removeDuplicates } from "../utils/array";
 import { Parking } from "../models/Parking";
 import { Adresse } from "../models/Adresse";
 
-export const getActivity = async () => {
+export const getActivity = async () => {  
+  let offset = 0;
+  let url = `https://angersloiremetropole.opendatasoft.com/api/explore/v2.1/catalog/datasets/equipements-sportifs-angers/records?limit=100&offset=${offset}`
   const res = await fetch(
-    "https://angersloiremetropole.opendatasoft.com/api/explore/v2.1/catalog/datasets/equipements-sportifs-angers/records?limit=100",
+    url,
     {
       method: "GET",
       headers: {
@@ -16,8 +18,29 @@ export const getActivity = async () => {
       },
     }
   );
+  
   let data = await res.json();
   let finalData: Activite[] = data.results;
+  const nbTotal = data.total_count;
+  let done = false;
+  while(nbTotal > 100 && done) {
+    offset += 100;
+    const res = await fetch(
+      url,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    let data = await res.json();
+    finalData.push(data.results)
+    if(finalData.length === nbTotal) {
+      done = true;
+    }
+  }
 
   return finalData;
 };
