@@ -40,6 +40,7 @@ import { LocationBtn } from "@/src/components/LocationBtn";
 import * as Location from "expo-location";
 import User from "@/src/components/icons/User";
 import { BottomSheetUser } from "@/src/components/BottomSheetUser";
+import SportPin from "@/src/components/icons/SportPin";
 
 const Index = () => {
   /* LOGIQUE */
@@ -219,6 +220,7 @@ const Index = () => {
             initialRegion={mapInitialSettings}
             ref={mapRef}
             zoomEnabled
+            showsUserLocation
           >
             {activite.map((item, index) => {
               return (
@@ -229,7 +231,9 @@ const Index = () => {
                     latitude: item.geo_shape.geometry.coordinates[1],
                     longitude: item.geo_shape.geometry.coordinates[0],
                   }}
-                />
+                >
+                  <SportPin />
+                </Marker>
               );
             })}
             {parking.map((item, index) => {
@@ -278,16 +282,7 @@ const Index = () => {
                 strokeWidth={2}
               />
             )}
-            {userLocation && (
-              <Marker
-                coordinate={{
-                  latitude: userLocation.coords.latitude,
-                  longitude: userLocation.coords.longitude,
-                }}
-              >
-                <User />
-              </Marker>
-            )}
+
           </MapView>
           <FilterButton onPress={handlePresentModalPress} />
           <LocationBtn onPress={handleUserPosition} />
@@ -305,6 +300,7 @@ const Index = () => {
             onPress={handlePressNearParking}
           />
           <BottomSheetPin
+            nearParking={nearParking}
             onDismiss={handleDismiss}
             onPress={handlePressNearParking}
             refBS={bottomSheetPinRef}

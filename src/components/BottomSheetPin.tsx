@@ -5,7 +5,6 @@ import {
 } from "@gorhom/bottom-sheet";
 import React, { FC, Ref, useEffect, useMemo, useState } from "react";
 import {
-  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,14 +14,15 @@ import { Activite } from "../models/Activite";
 import { Parking } from "../models/Parking";
 import { GRAY_COLOR, MAIN_COLOR } from "../styles/Color";
 import { croppedText } from "../utils/string";
-import { Polyline } from "react-native-maps";
 import { getAdresse } from "../hooks/MapsHooks";
 import { Adresse } from "../models/Adresse";
+import { calculateDistance } from "../utils/map";
 
 interface BottomSheetPinInterface {
   refBS: Ref<BottomSheetModal>;
   activite: Activite | null;
   parking: Parking | null;
+  nearParking: Parking | null;
   onPress: () => void;
   onDismiss: () => void;
 }
@@ -31,11 +31,14 @@ export const BottomSheetPin: FC<BottomSheetPinInterface> = ({
   refBS,
   activite,
   parking,
+  nearParking,
   onPress,
   onDismiss,
 }) => {
   const [adresse, setAdresse] = useState<Adresse | null>(null);
   const snapPoints = useMemo(() => ["35%", "35%"], []);
+  const [distance, setDistance] = useState<number>(0);
+
 
   const handleClick = async () => {
     onPress();
@@ -60,7 +63,12 @@ export const BottomSheetPin: FC<BottomSheetPinInterface> = ({
       };
       handle();
     }
-    
+    if (activite && nearParking) {
+      setDistance(Math.round(calculateDistance(activite?.geo_point_2d.lat, activite?.geo_point_2d.lon, nearParking?.geo_point_2d.lat, nearParking?.geo_point_2d.lon)) );
+    } else {
+      setDistance(0)
+    }
+
   }, [activite, parking]);
 
   const styles = StyleSheet.create({
@@ -107,7 +115,7 @@ export const BottomSheetPin: FC<BottomSheetPinInterface> = ({
       fontSize: 18,
     },
     parkingTxt: {
-      marginTop:10,
+      marginTop: 10,
     }
   });
   return (
@@ -126,12 +134,13 @@ export const BottomSheetPin: FC<BottomSheetPinInterface> = ({
                   {croppedText(activite.activite, 30)}
                 </Text>
                 <Text style={styles.city}>
-                  {adresse?.display_name ? croppedText(adresse?.display_name,200)  : "chargement ..."}
+                  {adresse?.display_name ? croppedText(adresse?.display_name, 200) : "chargement ..."}
                 </Text>
                 <Text style={styles.detail}>
                   {activite.nom} - {activite.nat_libe}
                 </Text>
                 <Text>{activite.nom_equip}</Text>
+                <Text>Distance parking le plus proche : {distance}m</Text>
               </View>
               <TouchableOpacity onPress={handleClick} style={styles.nearBtn}>
                 <Text style={styles.nearTxt}>Parking le plus proche</Text>
@@ -142,8 +151,8 @@ export const BottomSheetPin: FC<BottomSheetPinInterface> = ({
             <View>
               <Text style={styles.title}>{parking.voie}</Text>
               <Text style={styles.city}>
-                  {adresse?.display_name ?? "chargement ..."}
-                </Text>
+                {adresse?.display_name ?? "chargement ..."}
+              </Text>
               <Text style={styles.parkingTxt}>Accès au parking : {parking.acces}</Text>
               <Text>Type de parking : {parking.type}</Text>
               {parking.securise && <Text>Sécurisé : {parking.securise}</Text>}
