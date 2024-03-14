@@ -67,7 +67,7 @@ const Index = () => {
     const handle = async () => {
       const equip = await getEquipment(user);
       const activite = await parseActivity(data.activite, user, search);
-      const parking = await parseParking(user, data.parking)
+      const parking = await parseParking(user.favoriteTypeParking, data.parking)
       setEquipements(equip);
       setActivite(activite);
       setParking(parking);

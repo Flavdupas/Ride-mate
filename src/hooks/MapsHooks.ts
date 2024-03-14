@@ -167,9 +167,9 @@ export const getEquipment = async (user: User) => {
   return removeDuplicates(result);
 };
 
-export const parseParking = (user: User, data: Parking[]) => {
-  if (user.favoriteTypeParking !== null) {
-    return data.filter((item) => item.acces === TypeParking[user.favoriteTypeParking].title)
+export const parseParking = (favoriteTypeParking: number | null, data: Parking[]) => {
+  if (favoriteTypeParking !== null) {
+    return data.filter((item) => item.acces === TypeParking[favoriteTypeParking].title)
   }
   return data
 }
