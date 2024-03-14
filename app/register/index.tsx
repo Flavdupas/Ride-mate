@@ -1,9 +1,14 @@
 import { Bar } from "@/src/components/Bar";
 import { SportView } from "@/src/components/SportView";
 import { ListSport } from "@/src/constants/Sport";
+import {
+  updateFavoriteIndexSport,
+  updateFavoriteSports,
+  updateRegister,
+} from "@/src/store/user/User";
 import { GRAY_COLOR, MAIN_COLOR } from "@/src/styles/Color";
 import GlobalStyle from "@/src/styles/Global";
-import { FlashList } from "@shopify/flash-list";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -12,11 +17,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
 const Index = () => {
   /* LOGIQUE */
   const SPORTS = [...ListSport];
-  const [sportChoosen, setSportChoosen] = useState<number[]>([]);
+  const [sportChoosen, setSportChoosen] = useState<number | null>(null);
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch(updateFavoriteIndexSport(sportChoosen));
+    dispatch(updateRegister(true));
+    router.replace("/home/");
+  };
 
   /* STYLES */
   const styles = StyleSheet.create({
@@ -25,7 +38,7 @@ const Index = () => {
       padding: 10,
     },
     scrollView: {
-      paddingTop: 125,
+      paddingTop: 100,
     },
     title: {
       color: MAIN_COLOR,
@@ -98,7 +111,7 @@ const Index = () => {
         </View>
       </ScrollView>
       <View style={styles.btnWrapper}>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={handleClick}>
           <Text style={styles.txtBtn}>Valider</Text>
         </TouchableOpacity>
       </View>

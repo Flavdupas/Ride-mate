@@ -3,22 +3,27 @@ import { StyleSheet, View, Text, Image } from "react-native";
 import LottieView from "lottie-react-native";
 import { MAIN_COLOR } from "@/src/styles/Color";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/src/store/store";
 import { User } from "@/src/models/UserModel";
-import { router } from "expo-router";
-import { delay } from "@/src/utils/time";
 import { handleRegisterCheck } from "@/src/hooks/UserHooks";
+import { getActivity, getParking } from "@/src/hooks/MapsHooks";
+import { updateActivite, updateParking } from "@/src/store/data/Data";
 
 const Index = () => {
   /* LOGIQUE */
   const user: User = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
 
-  //Vérifie si l'utilisateur est enregistré ou pas
   useEffect(() => {
-    delay(2000).then(() => {
+    const handle = async () => {
+      const activite = await getActivity();
+      const parking = await getParking();
+      dispatch(updateActivite(activite));
+      dispatch(updateParking(parking));
       handleRegisterCheck(user);
-    });
+    }
+    handle();
   }, []);
 
   /* STYLE */
