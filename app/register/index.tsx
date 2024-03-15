@@ -25,11 +25,13 @@ const Index = () => {
   const [sportChoosen, setSportChoosen] = useState<number | null>(null);
   const dispatch = useDispatch();
 
-  const handleClick = () => {
-    dispatch(updateFavoriteIndexSport(sportChoosen));
-    dispatch(updateRegister(true));
-    router.replace("/home/");
-  };
+const handleClick = () => {
+  // Met à jour le store de l'utilisateur
+  dispatch(updateFavoriteIndexSport(sportChoosen));
+  dispatch(updateRegister(true));
+  // Navigue vers l'écran d'accueil en remplaçant l'écran actuel
+  router.replace("/home/");
+};
 
   /* STYLES */
   const styles = StyleSheet.create({

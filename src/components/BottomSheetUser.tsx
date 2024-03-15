@@ -3,21 +3,13 @@ import {
   BottomSheetModalProvider,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import React, { FC, Ref, useEffect, useMemo, useState } from "react";
+import React, { FC, Ref, useMemo } from "react";
 import {
-  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
-import { Activite } from "../models/Activite";
-import { Parking } from "../models/Parking";
-import { GRAY_COLOR, MAIN_COLOR } from "../styles/Color";
-import { croppedText } from "../utils/string";
-import { Polyline } from "react-native-maps";
-import { getAdresse } from "../hooks/MapsHooks";
-import { Adresse } from "../models/Adresse";
+import { GRAY_COLOR } from "../styles/Color";
 
 interface BottomSheetUserInterface {
   refBS: Ref<BottomSheetModal>;
@@ -25,7 +17,6 @@ interface BottomSheetUserInterface {
 }
 
 export const BottomSheetUser: FC<BottomSheetUserInterface> = ({ refBS, onPress }) => {
-  const [adresse, setAdresse] = useState<Adresse | null>(null);
   const snapPoints = useMemo(() => ["25%", "25%"], []);
 
   const styles = StyleSheet.create({
