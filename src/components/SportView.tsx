@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import { Sport } from "../models/SportModel";
 import { GRAY_COLOR, MAIN_COLOR } from "../styles/Color";
@@ -15,9 +15,9 @@ export const SportView: FC<SportViewInterface> = ({
   setSportChoosen,
 }) => {
   /* LOGIQUE */
-
   const handleClick = () => {
     if (sport.index === sportChoosen) {
+      //Decochee le sport qui est selectionné
       setSportChoosen(-1);
     } else {
       setSportChoosen(sport.index);

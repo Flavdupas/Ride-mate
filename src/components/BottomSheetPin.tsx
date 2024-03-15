@@ -64,8 +64,10 @@ export const BottomSheetPin: FC<BottomSheetPinInterface> = ({
       handle();
     }
     if (activite && nearParking) {
+      //Calcule la distance pour la calculer
       setDistance(Math.round(calculateDistance(activite?.geo_point_2d.lat, activite?.geo_point_2d.lon, nearParking?.geo_point_2d.lat, nearParking?.geo_point_2d.lon)) );
     } else {
+      //Affiche pas la distance
       setDistance(0)
     }
 

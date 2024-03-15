@@ -23,7 +23,7 @@ interface CustomModalInterface {
 }
 
 export const CustomModal: FC<CustomModalInterface> = ({ modalVisible, setModalVisible, data, user, sportList, typeParking }) => {
-
+  /* VARIABLES */
   const dispatch = useDispatch();
 
   /* STYLES */
@@ -53,6 +53,7 @@ export const CustomModal: FC<CustomModalInterface> = ({ modalVisible, setModalVi
   });
 
   const handleClick = (index: number) => {
+    //met a jour le store de l'app en fonction de la valeur filtre choisie
     if(typeParking) {
       dispatch(updateFavoriteTypeParking(index));
       setModalVisible(false);

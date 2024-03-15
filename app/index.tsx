@@ -15,16 +15,21 @@ const Index = () => {
   const user: User = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const handle = async () => {
-      const activite = await getActivity();
-      const parking = await getParking();
-      dispatch(updateActivite(activite));
-      dispatch(updateParking(parking));
-      handleRegisterCheck(user);
-    }
-    handle();
-  }, []);
+useEffect(() => {
+  // Fonction asynchrone pour récupérer les données
+  const handle = async () => {
+    const activite = await getActivity();
+    const parking = await getParking();
+
+    // Met à jour le store de l'application avec les activités et parkings
+    dispatch(updateActivite(activite));
+    dispatch(updateParking(parking));
+
+    // Applique la logique suivant si le user est enregistré ou pas
+    handleRegisterCheck(user);
+  };
+  handle();
+}, []);
 
   /* STYLE */
   const styles = StyleSheet.create({
